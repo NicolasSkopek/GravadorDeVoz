@@ -8,7 +8,6 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import numpy as np
 import assemblyai as aai
-import os
 
 # Definir uma taxa de amostragem (sample rate)
 SAMPLE_RATE = 44100  # 44.1kHz (qualidade de CD)
@@ -80,10 +79,16 @@ class AudioApp(App):
                 print(f"Transcrição: {transcript.text}")
                 self.transcription_label.text = f"Transcrição: {transcript.text}"
                 self.record_button.text = "Transcrição Completa. Iniciar Nova Gravação"
+                # Reconfigura o botão para iniciar uma nova gravação
+                self.record_button.unbind(on_press=self.stop_recording)
+                self.record_button.bind(on_press=self.start_recording)
         except Exception as e:
             print(f"Erro durante a transcrição: {e}")
             self.transcription_label.text = "Erro na Transcrição. Tente Novamente."
             self.record_button.text = "Erro na Transcrição. Tente Novamente."
+            # Reconfigura o botão para iniciar uma nova gravação
+            self.record_button.unbind(on_press=self.stop_recording)
+            self.record_button.bind(on_press=self.start_recording)
 
 # Rodar o aplicativo Kivy
 if __name__ == '__main__':
